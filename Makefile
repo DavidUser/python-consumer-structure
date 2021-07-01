@@ -1,5 +1,5 @@
 # Local
-RUNNER ?= poetry run
+RUNNER ?= PYTHONPATH=./src poetry run
 MODULES ?= src tests
 
 black:
@@ -16,8 +16,13 @@ mypy:
 
 lint: black-check flake8 mypy
 
-test:
+test: requirements
 	$(RUNNER) pytest --tb=native tests
 
-watch-tests:
+watch-tests: requirements
 	find . -name '*.py' | entr poetry run pytest --tb=short -vv
+
+requirements:
+	poetry install
+
+.PHONY: requirements
